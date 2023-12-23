@@ -1,0 +1,17 @@
+# Deployment tag definition
+
+tag_application         = "alb-test-tf-import"
+tag_app_component       = "alb"
+tag_function            = "application"
+tag_business_unit       = "gdm"
+tag_app_environment     = "sandbox"
+tag_app_contacts        = "capterra_devops"
+tag_created_by          = "narayanan.narasimhan@gartner.com"
+tag_system_risk_class   = "3"
+tag_region              = "us-east-1"
+tag_network_environment = "sandbox"
+tag_monitoring          = "false"
+tag_terraform_managed   = "true"
+tag_vertical            = "capterra"
+tag_product             = "nlb-test-tf-import"
+tag_environment         = "sandbox"

@@ -1,0 +1,13 @@
+# AWS infrastructure details
+application       = "iam"
+app_component     = "identity"
+function          = "federation"
+business_unit     = "capterra"
+app_contacts      = "capterra_devops"
+created_by        = "dan.oliva@gartner.com"
+region            = "us-east-1"
+monitoring        = "false"
+terraform_managed = "true"
+vertical          = "capterra"
+product           = "identity"
+environment       = "production"

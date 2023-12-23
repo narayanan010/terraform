@@ -1,0 +1,17 @@
+# Deployment tag definition
+
+tag_application         = "vp-frontend"
+tag_app_component       = "vp"
+tag_function            = "application"
+tag_business_unit       = "gdm"
+tag_app_environment     = "production"
+tag_app_contacts        = "capterra_devops"
+tag_created_by          = "sarvesh.gupta@gartner.com"
+tag_system_risk_class   = "3"
+tag_region              = "us-east-1"
+tag_network_environment = "production"
+tag_monitoring          = "true"
+tag_terraform_managed   = "true"
+tag_vertical            = "capterra"
+tag_product             = "vp"
+tag_environment         = "production"

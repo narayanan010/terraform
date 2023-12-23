@@ -1,0 +1,41 @@
+POST _aliases
+{
+  "actions": [
+    {
+      "add": {
+        "index": "site_search_product_index_v1",
+        "alias": "site_search_product_index_alias"
+      }
+    },
+    {
+      "add": {
+        "index": "site_search_product_index_v1",
+        "alias": "site_search_product_query_alias"
+      }
+    },
+    {
+      "add": {
+        "index": "site_search_category_index_v1",
+        "alias": "site_search_category_index_alias"
+      }
+    },
+    {
+      "add": {
+        "index": "site_search_category_index_v1",
+        "alias": "site_search_category_query_alias"
+      }
+    },
+    {
+      "add": {
+        "index": "site_search_resource_index_v1",
+        "alias": "site_search_resource_index_alias"
+      }
+    },
+    {
+      "add": {
+        "index": "site_search_resource_index_v1",
+        "alias": "site_search_resource_query_alias"
+      }
+    }
+  ]
+}

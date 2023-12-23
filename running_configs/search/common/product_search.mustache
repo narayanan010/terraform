@@ -1,0 +1,136 @@
+POST _scripts/product_search
+{
+  "script": {
+    "lang": "mustache",
+    "source": {
+      "query": {
+        "bool": {
+          "should": [
+            {
+              "match_phrase": {
+                "features": "{{search}}"
+              }
+            },
+            {
+              "match_phrase": {
+                "long_description": "{{search}}"
+              }
+            },
+            {
+              "match_phrase": {
+                "es_description": "{{search}}"
+              }
+            },
+            {
+              "match_phrase": {
+                "es_title": "{{search}}"
+              }
+            },
+            {
+              "multi_match": {
+                "query": "{{search}}",
+                "fields": [
+                  "features^2",
+                  "long_description^2",
+                  "notes",
+                  "overview",
+                  "pricing_details",
+                  "product_difference",
+                  "review_excerpt_override",
+                  "es_description^2",
+                  "short_desc^2",
+                  "slug",
+                  "target_audience",
+                  "target_industry",
+                  "target_market^2",
+                  "vendor_name^3",
+                  "es_title^3",
+                  "product_name^3",
+                  "es_url",
+                  "display_name",
+                  "description",
+                  "functional_group",
+                  "long_name",
+                  "product_name_at_creation",
+                  "related_products",
+                  "url",
+                  "vendor_url_at_product_level",
+                  "integrations",
+                  "best_category"
+                ],
+                "fuzziness": "AUTO",
+                "prefix_length": 5,
+                "max_expansions": 50
+              }
+            }
+          ],
+          "filter": {
+            "bool": {
+              "should": [
+                {
+                  "match": {
+                    "countrycode": "{{countrycode}}"
+                  }
+                },
+                {
+                  "match": {
+                    "countrycode": "All"
+                  }
+                }
+              ],
+              "must": [
+                {
+                  "term": {
+                    "international": false
+                  }
+                },
+                {
+                  "term": {
+                    "listed": true
+                  }
+                },
+                {
+                  "term": {
+                    "vendor_enabled": true
+                  }
+                },
+                {
+                  "term": {
+                    "product_enabled": true
+                  }
+                }
+              ]
+            }
+          },
+          "minimum_should_match": 1
+        }
+      },
+      "size": "{{size}}",
+      "from": "{{from}}",
+      "sort": [
+        {
+          "_score": {
+            "order": "desc"
+          }
+        },
+        {
+          "revenue": {
+            "order": "desc"
+          }
+        },
+        {
+          "_id": {
+            "order": "desc"
+          }
+        }
+      ],
+      "_source": [
+        "es_title",
+        "es_description",
+        "es_url",
+        "es_logo",
+        "es_vendor_name"
+      ]
+    }
+  }
+}

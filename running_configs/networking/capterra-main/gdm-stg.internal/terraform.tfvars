@@ -1,0 +1,10 @@
+modulecaller_source_region = "us-east-1"
+modulecaller_assume_role_primary_account = "arn:aws:iam::176540105868:role/assume-capterra-admin-batch"
+modulecaller_assume_role_authorized_account = "arn:aws:iam::273213456764:role/assume-capterra-search-staging-admin"
+vertical = "capterra"
+vpc_id = "vpc-60714d06"
+authorized_vpc_id = "vpc-0715b585d83b5dac0"
+zone_id = "Z07427541KG0SEI2GAG2J"
+record_dns_value = ["gdm-bxapi-test.cluster-cdzvwtx1p0se.us-east-1.rds.amazonaws.com"]
+record_dns_value_gdm-bids-global-stg = ["capterra-accounts-staging.cluster-cdzvwtx1p0se.us-east-1.rds.amazonaws.com"]
+record_dns_value_gdm-vx-autobidder-global-stg = ["gdm-vx-autobidder-global-stg.cluster-cdzvwtx1p0se.us-east-1.rds.amazonaws.com"]

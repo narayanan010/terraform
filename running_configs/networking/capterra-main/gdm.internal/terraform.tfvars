@@ -1,0 +1,12 @@
+modulecaller_source_region = "us-east-1"
+modulecaller_assume_role_primary_account = "arn:aws:iam::176540105868:role/assume-capterra-admin-batch"
+vertical = "capterra"
+vpc_id = ["vpc-c2ecc1a4","vpc-01dd95434aa80f7a8"]
+vpc_region = ["us-east-1","us-west-2"]
+record_dns_value_gdm-bids-global-prod = ["capterra-postgres-production.cluster-cdzvwtx1p0se.us-east-1.rds.amazonaws.com"]
+record_dns_value_gdm-bxapi-global-prod = ["gdm-bxapi-global-prod-primary-cluster.cluster-cdzvwtx1p0se.us-east-1.rds.amazonaws.com"]
+record_dns_value_gdm-bxapi-global-prod-dr = ["gdm-bxapi-global-prod-secondary-cluster.cluster-ro-cerwveb3qfhv.us-west-2.rds.amazonaws.com"]
+record_dns_value_gdm-vxautobidder-global-prod = ["gdm-vxautobidder-global-prod-primary-cluster.cluster-cdzvwtx1p0se.us-east-1.rds.amazonaws.com"]
+record_dns_value_gdm-gdm-vxautobidder-global-prod-dr = ["gdm-vxautobidder-global-prod-secondary-cluster.cluster-cerwveb3qfhv.us-west-2.rds.amazonaws.com"]
+record_dns_value_gdm-gdm-vxautobidder-global-prod-dr-ro = ["gdm-vxautobidder-global-prod-secondary-cluster.cluster-ro-cerwveb3qfhv.us-west-2.rds.amazonaws.com"]
+record_dns_value_gdm-gdm-bxapi-global-prod-ro = ["gdm-bxapi-global-prod-primary-cluster.cluster-ro-cdzvwtx1p0se.us-east-1.rds.amazonaws.com"]

@@ -1,0 +1,34 @@
+{
+    "version": "0", 
+    "id": "e7387fb1-852e-9ac3-dd64-14d08628c348", 
+    "detail-type": "Config Rules Compliance Change", 
+    "source": "aws.config", 
+    "account": "944864126557", 
+    "time": "2022-07-19T12:54:51Z", "region": "us-east-1", 
+    "resources": [], 
+    "detail": {
+        "resourceId": "test-compliance-event-slack", 
+        "awsRegion": "us-east-1", 
+        "awsAccountId": "944864126557", 
+        "configRuleName": "custom-s3-policy-check-new-bucket", 
+        "recordVersion": "1.0", 
+        "configRuleARN": "arn:aws:config:us-east-1:944864126557:config-rule/config-rule-tfrt9r", 
+        "messageType": "ComplianceChangeNotification", 
+        "newEvaluationResult": {
+            "evaluationResultIdentifier": {
+                "evaluationResultQualifier": {
+                    "configRuleName": "custom-s3-policy-check-new-bucket", 
+                    "resourceType": "AWS::S3::Bucket", 
+                    "resourceId": "test-compliance-event-slack"
+                }, 
+                "orderingTimestamp": "2022-07-19T12:54:13.000Z"
+            },
+            "complianceType": "NON_COMPLIANT", 
+            "resultRecordedTime": "2022-07-19T12:54:50.351Z", 
+            "configRuleInvokedTime": "2022-07-19T12:54:48.454Z", 
+            "annotation": "Bucket Policy does not exists"
+        }, 
+        "notificationCreationTime": "2022-07-19T12:54:51.386Z", 
+        "resourceType": "AWS::S3::Bucket"
+    }
+}

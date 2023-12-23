@@ -1,0 +1,24 @@
+# AWS infrastructure details
+modulecaller_source_region                = "us-east-1"
+modulecaller_assume_role_deployer_account = "arn:aws:iam::148797279579:role/assume-capterra-search-dev-admin"
+
+#OAC Definition
+name        = "capterra-compare-ui"
+environment = "dev"
+
+# Deployment tag definition
+tag_application         = "capterra-compare"
+tag_app_component       = "capterra"
+tag_function            = "cache-cdn"
+tag_business_unit       = "gdm"
+tag_app_environment     = "dev"
+tag_app_contacts        = "capterra_devops"
+tag_created_by          = "narayanan.narasimhan@gartner.com"
+tag_system_risk_class   = "3"
+tag_region              = "us-east-1"
+tag_network_environment = "dev"
+tag_monitoring          = "false"
+tag_terraform_managed   = "true"
+tag_vertical            = "capterra"
+tag_product             = "capterra-compare"
+tag_environment         = "dev"

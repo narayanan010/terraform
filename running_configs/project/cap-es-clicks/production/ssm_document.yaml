@@ -1,0 +1,47 @@
+---
+description: "Uploader"
+
+schemaVersion: '2.2'
+parameters:
+  branch:
+    type: "String"
+    description: "The Git branch to use."
+    default: "main"
+  uploader:
+    type: "String"
+    description: "The uploader to execute."
+    default: "vendor-info"
+    allowedValues:
+      - 'vendor-info'
+      - 'product-categories'
+      - 'impact-conversions'
+      - 'category-features'
+      - 'category'
+      - 'bids_sem_compare'
+      - 'bids_sem'
+      - 'bids_delete'
+      - 'bids'
+      - 'banned-ips'
+
+mainSteps:
+  - action: aws:runShellScript
+    name: Test
+    description: "Execute Scheduler"
+    inputs:
+      maxAttempts: 1
+      runCommand:
+        - |
+          set -e
+          token=$(aws ssm get-parameter \
+            --name '/devops/github/token/capterra/prod/cap-es-clicks' \
+            --with-decryption --output text --query Parameter.Value)
+
+          echo "git pull and bundle install"
+          runuser -l esclient -c "cd /capterra/scripts/cap-es-clicks && \
+            git pull https://$token@github.com/capterra/cap-es-clicks {{ branch }} && \
+            cd {{ uploader }} && \
+            BUNDLE_DEPLOYMENT=1 BUNDLE_RUBYGEMS__PKG__GITHUB__COM=$token bundle install"
+
+          echo "deploying crontab for uploader: {{ uploader }}"
+          runuser -l esclient -c "cd /capterra/scripts/cap-es-clicks/{{ uploader }} && \
+            ENV=production whenever --update-crontab"

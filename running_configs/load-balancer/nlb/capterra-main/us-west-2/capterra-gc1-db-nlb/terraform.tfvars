@@ -1,0 +1,17 @@
+# Deployment tag definition
+
+tag_application         = "capterra-gc1-db-nlb"
+tag_app_component       = "nlb"
+tag_function            = "nlb"
+tag_business_unit       = "gdm"
+tag_app_environment     = "prod-dr"
+tag_app_contacts        = "capterra_devops"
+tag_created_by          = "sarvesh.gupta@gartner.com"
+tag_system_risk_class   = "3"
+tag_region              = "us-west-2"
+tag_network_environment = "prod-dr"
+tag_monitoring          = "false"
+tag_terraform_managed   = "true"
+tag_vertical            = "capterra"
+tag_product             = "capterra-gc1-db-nlb"
+tag_environment         = "prod-dr"

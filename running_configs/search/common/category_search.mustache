@@ -1,0 +1,80 @@
+POST _scripts/category_search
+{
+  "script": {
+    "lang": "mustache",
+    "source": {
+      "size": "{{ size }}",
+      "from": "{{ from }}",
+      "sort": [
+        {
+          "_score": {
+            "order": "desc"
+          }
+        },
+        {
+          "total_revenue": {
+            "order": "desc"
+          }
+        }
+      ],
+      "query": {
+        "bool": {
+          "should": [
+            {
+              "multi_match": {
+                "query": "{{ search }}",
+                "fields": [
+                  "names^8",
+                  "meta_keywords",
+                  "html_name",
+                  "description",
+                  "primary_products^8",
+                  "all_products"
+                ]
+              }
+            },
+            {
+              "multi_match": {
+                "query": "{{ search }}",
+                "fields": [
+                  "names^4"
+                ],
+                "type": "phrase"
+              }
+            },
+            {
+              "term": {
+                "names.keyword": {
+                  "value": "{{ search }}",
+                  "boost": 8
+                }
+              }
+            }
+          ],
+          "minimum_should_match": 1,
+          "filter": {
+            "bool": {
+              "must": [
+                {
+                  "term": {
+                    "enabled": "t"
+                  }
+                },
+                {
+                  "term": {
+                    "show": "t"
+                  }
+                }
+              ]
+            }
+          }
+        }
+      },
+      "_source": [
+        "es_title",
+        "es_description",
+        "es_url"
+      ]
+    }
+  }
+}

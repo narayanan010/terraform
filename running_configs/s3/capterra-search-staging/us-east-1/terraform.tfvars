@@ -1,0 +1,22 @@
+principal_list = [
+  "arn:aws:iam::273213456764:role/assume-capterra-search-staging-admin",
+  "arn:aws:iam::273213456764:role/assume-capterra-search-staging-admin-mfa",
+  "arn:aws:iam::273213456764:role/assume-capterra-search-staging-deployer",
+  "arn:aws:iam::273213456764:role/assume-capterra-search-staging-deployer-mfa",
+  "arn:aws:iam::273213456764:role/assume-capterra-search-staging-developer",
+  "arn:aws:iam::273213456764:role/assume-capterra-search-staging-developer-mfa",
+  "arn:aws:iam::273213456764:role/cap-role-uw-auth-dev",
+  "arn:aws:iam::273213456764:role/cross-account-roles/cross-account-role-codedeploy",
+  "arn:aws:iam::273213456764:role/cross-account-roles/GartnerCodeDeployServiceRole",
+  "arn:aws:iam::273213456764:role/ppl-swagger-mock-server-dev-us-east-1-lambdaRole",
+  "arn:aws:iam::273213456764:role/Capterra-Admin",
+  "arn:aws:iam::273213456764:role/Capterra-AutomationAdmin",
+  "arn:aws:iam::273213456764:role/Capterra-DatabaseAdmin",
+  "arn:aws:iam::273213456764:role/Capterra-NetAdmin",
+  "arn:aws:iam::273213456764:role/Capterra-Search-Staging-AppsDev",
+  "arn:aws:iam::273213456764:role/Capterra-SecAdmin",
+  "arn:aws:iam::273213456764:role/Capterra-StorageAdmin",
+  "arn:aws:iam::273213456764:role/Capterra-SysAdmin",
+  "arn:aws:iam::273213456764:role/Gartner-SecAdmin",
+  "arn:aws:iam::273213456764:role/Gartner-SuperAdmin"
+]
