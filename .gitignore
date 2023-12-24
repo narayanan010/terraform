@@ -1,0 +1,15 @@
+# Plan files and local backends
+**/.terraform.lock.hcl
+**/*.tfplan
+**/.terraform
+
+#  .tfstate files
+**/*.tfstate
+**/*.tfstate.*
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Virtaul environments
+venv/%
