@@ -5,5 +5,4 @@ projects:
     autoplan:
      when_modified: ["**/*.tf", "**/*.tfvars", "modules/**/*.tf", "running_configs/**/*.tf"]
      enabled: true
-    terraform_version: v1.8.0 # adjust to what you use
-    workflow: default
+    terraform_version: v1.1.5 # adjust to what you use
