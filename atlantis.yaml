@@ -1,4 +1,14 @@
 version: 3
+
 autodiscover:
-  # This tells Atlantis to look everywhere for .tf files
   mode: auto
+
+workflows:
+  default:
+    plan:
+      steps:
+        - init
+        - plan
+    apply:
+      steps:
+        - apply
