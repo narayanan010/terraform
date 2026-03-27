@@ -1,7 +1,7 @@
 version: 3
 projects:
   - name: s3-backend-project
-    dir: . # path to Terraform code
+    dir: running_configs/* # path to Terraform code
     autoplan:
      when_modified: ["**/*.tf", "**/*.tfvars", "modules/**/*.tf", "running_configs/**/*.tf"]
      enabled: true
