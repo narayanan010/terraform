@@ -1,7 +1,17 @@
 version: 3
 
 autodiscover:
-  mode: auto
+  mode: disabled
+
+projects:
+  - name: iam-ec2-roles-capterra
+    dir: running_configs/iam/ec2-roles/capterra
+    workspace: default
+    autoplan:
+      when_modified:
+        - "*.tf"
+        - "*.tfvars"
+      enabled: true
 
 workflows:
   default:
