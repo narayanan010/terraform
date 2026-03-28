@@ -5,7 +5,9 @@ on:
   push:
     paths:
       - 'running_configs/**'
-
+permissions:
+  contents: write
+  
 jobs:
   generate:
     runs-on: ubuntu-latest
