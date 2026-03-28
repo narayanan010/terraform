@@ -1,0 +1,54 @@
+# .github/workflows/generate-atlantis-config.yml
+name: Generate Atlantis Config
+
+on:
+  push:
+    paths:
+      - 'running_configs/**'
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Generate atlantis.yaml
+        run: |
+          cat > atlantis.yaml <<'EOF'
+          version: 3
+          autodiscover:
+            mode: disabled
+          parallel_plan: true
+          parallel_apply: true
+          workflows:
+            default:
+              plan:
+                steps:
+                  - init
+                  - plan
+              apply:
+                steps:
+                  - apply
+          projects:
+          EOF
+
+          find running_configs -name "*.tf" -exec dirname {} \; | sort -u | while read dir; do
+            name=$(echo "$dir" | tr '/' '-')
+            cat >> atlantis.yaml <<EOF
+            - name: $name
+              dir: $dir
+              workspace: default
+              autoplan:
+                when_modified:
+                  - "*.tf"
+                  - "*.tfvars"
+                enabled: true
+          EOF
+          done
+
+      - name: Commit updated atlantis.yaml
+        run: |
+          git config user.email "narayanan.n010@gmail.com"
+          git config user.name "narayanan010"
+          git add atlantis.yaml
+          git diff --cached --quiet || git commit -m "chore: regenerate atlantis.yaml" && git push
