@@ -3,6 +3,9 @@ version: 3
 autodiscover:
   mode: disabled
 
+parallel_plan: true
+parallel_apply: true
+
 projects:
   - name: running_configs-api-gw-custom-domain-dd.capstage.net
     dir: running_configs/api-gw-custom-domain/dd.capstage.net
