@@ -21,5 +21,6 @@ resource "aws_iam_role" "test_role" {
     tag-key     = "tag-value"
     environment = "test"
     team        = "devops"
+    application = "capterra"
   }
 }
