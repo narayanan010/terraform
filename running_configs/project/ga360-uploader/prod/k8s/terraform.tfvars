@@ -1,7 +1,0 @@
-modulecaller_source_region = "us-east-1"
-modulecaller_assume_role_deployer_account = "arn:aws:iam::176540105868:role/assume-capterra-admin-batch"
-vertical = "capterra"
-application = "ga360-uploader"
-environment = "prod"
-namespace = "team-sauron"
-provider_url = "oidc.eks.us-east-1.amazonaws.com/id/51B8E962F37D90A01F8E85D53A318C3C"
