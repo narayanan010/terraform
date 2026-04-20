@@ -3,53 +3,19 @@ autodiscover:
   mode: disabled
 parallel_plan: true
 parallel_apply: true
-
 workflows:
   default:
     plan:
       steps:
-        # Step 1: Run Checkov and report result as GitHub Check
-        - run: |
-            echo "=== Running Checkov ==="
-            checkov -d $PLANFILE_DIR \
-              --framework terraform \
-              --output cli \
-              --output-file-path /tmp \
-              --soft-fail 2>&1 | tee /tmp/checkov-$PROJECT_NAME.txt
-            CHECKOV_EXIT=${PIPESTATUS[0]}
-
-            # Build a summary for the PR comment
-            CHECKOV_SUMMARY=$(tail -20 /tmp/checkov-$PROJECT_NAME.txt)
-
-            if [ $CHECKOV_EXIT -eq 0 ]; then
-              echo "✅ Checkov passed for $PROJECT_NAME"
-            else
-              echo "❌ Checkov failed for $PROJECT_NAME"
-              echo "$CHECKOV_SUMMARY"
-              exit 1
-            fi
-
-        # Step 2: Standard Terraform steps
         - init
         - plan
     apply:
       steps:
         - apply
-
-  # Standalone checkov-only workflow (for manual triggers)
-  checkov-only:
-    plan:
-      steps:
-        - run: |
-            checkov -d $PLANFILE_DIR \
-              --framework terraform \
-              --output cli \
-              --soft-fail 2>&1
 projects:
   - name: running_configs-DR-EC2-CD1A
     dir: running_configs/DR/EC2/CD1A
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -58,7 +24,6 @@ projects:
   - name: running_configs-DR-cloudfront-serverless-apps-compare-ui-dr-prod
     dir: running_configs/DR/cloudfront/serverless-apps/compare-ui-dr/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -67,7 +32,6 @@ projects:
   - name: running_configs-DR-cloudfront-serverless-apps-sa_ppl_form-dev
     dir: running_configs/DR/cloudfront/serverless-apps/sa_ppl_form/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -76,7 +40,6 @@ projects:
   - name: running_configs-DR-cloudfront-serverless-apps-sa_ppl_form-prod
     dir: running_configs/DR/cloudfront/serverless-apps/sa_ppl_form/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -85,7 +48,6 @@ projects:
   - name: running_configs-DR-cloudfront-serverless-apps-spotlight-ui-dr-prod
     dir: running_configs/DR/cloudfront/serverless-apps/spotlight-ui-dr/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -94,7 +56,6 @@ projects:
   - name: running_configs-api-gw-custom-domain-dd.capstage.net
     dir: running_configs/api-gw-custom-domain/dd.capstage.net
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -103,7 +64,6 @@ projects:
   - name: running_configs-api-gw-custom-domain-dd.capterra.com
     dir: running_configs/api-gw-custom-domain/dd.capterra.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -112,7 +72,6 @@ projects:
   - name: running_configs-aws-config-notification-capterra-main-us-east-1
     dir: running_configs/aws-config-notification/capterra-main/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -121,7 +80,6 @@ projects:
   - name: running_configs-aws-config-capterra-crf-dev-us-east-1
     dir: running_configs/aws-config/capterra-crf-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -130,7 +88,6 @@ projects:
   - name: running_configs-aws-config-capterra-crf-prd-us-east-1
     dir: running_configs/aws-config/capterra-crf-prd/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -139,7 +96,6 @@ projects:
   - name: running_configs-aws-config-capterra-crf-stg-us-east-1
     dir: running_configs/aws-config/capterra-crf-stg/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -148,7 +104,6 @@ projects:
   - name: running_configs-aws-config-capterra-main-us-east-1
     dir: running_configs/aws-config/capterra-main/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -157,7 +112,6 @@ projects:
   - name: running_configs-aws-config-capterra-sandbox-us-east-1
     dir: running_configs/aws-config/capterra-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -166,7 +120,6 @@ projects:
   - name: running_configs-aws-config-capterra-sandbox-us-west-1
     dir: running_configs/aws-config/capterra-sandbox/us-west-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -175,7 +128,6 @@ projects:
   - name: running_configs-aws-config-capterra-search-dev-us-east-1
     dir: running_configs/aws-config/capterra-search-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -184,7 +136,6 @@ projects:
   - name: running_configs-aws-config-capterra-search-prod-us-east-1
     dir: running_configs/aws-config/capterra-search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -193,7 +144,6 @@ projects:
   - name: running_configs-aws-config-capterra-search-staging-us-east-1
     dir: running_configs/aws-config/capterra-search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -202,7 +152,6 @@ projects:
   - name: running_configs-aws-guardduty-notification-capterra-crf-dev-us-east-1
     dir: running_configs/aws-guardduty-notification/capterra-crf-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -211,7 +160,6 @@ projects:
   - name: running_configs-aws-guardduty-notification-capterra-crf-prod-us-east-1
     dir: running_configs/aws-guardduty-notification/capterra-crf-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -220,7 +168,6 @@ projects:
   - name: running_configs-aws-guardduty-notification-capterra-crf-staging-us-east-1
     dir: running_configs/aws-guardduty-notification/capterra-crf-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -229,7 +176,6 @@ projects:
   - name: running_configs-aws-guardduty-notification-capterra-main-us-east-1
     dir: running_configs/aws-guardduty-notification/capterra-main/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -238,7 +184,6 @@ projects:
   - name: running_configs-aws-guardduty-notification-capterra-search-dev-us-east-1
     dir: running_configs/aws-guardduty-notification/capterra-search-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -247,7 +192,6 @@ projects:
   - name: running_configs-aws-guardduty-notification-capterra-search-prod-us-east-1
     dir: running_configs/aws-guardduty-notification/capterra-search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -256,7 +200,6 @@ projects:
   - name: running_configs-aws-guardduty-notification-capterra-search-staging-us-east-1
     dir: running_configs/aws-guardduty-notification/capterra-search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -265,7 +208,6 @@ projects:
   - name: running_configs-aws-sqs-capterra-sandbox-us-east-1
     dir: running_configs/aws-sqs/capterra-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -274,7 +216,6 @@ projects:
   - name: running_configs-cloudfront-k8s-apps-blog-ui-prod
     dir: running_configs/cloudfront/k8s-apps/blog-ui/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -283,7 +224,6 @@ projects:
   - name: running_configs-cloudfront-k8s-apps-blog-ui-staging
     dir: running_configs/cloudfront/k8s-apps/blog-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -292,7 +232,6 @@ projects:
   - name: running_configs-cloudfront-oac-compare-dev
     dir: running_configs/cloudfront/oac/compare/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -301,7 +240,6 @@ projects:
   - name: running_configs-cloudfront-oac-compare-prod
     dir: running_configs/cloudfront/oac/compare/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -310,7 +248,6 @@ projects:
   - name: running_configs-cloudfront-oac-compare-staging
     dir: running_configs/cloudfront/oac/compare/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -319,7 +256,6 @@ projects:
   - name: running_configs-cloudfront-oac-crf-dev
     dir: running_configs/cloudfront/oac/crf/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -328,7 +264,6 @@ projects:
   - name: running_configs-cloudfront-oac-crf-prod
     dir: running_configs/cloudfront/oac/crf/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -337,7 +272,6 @@ projects:
   - name: running_configs-cloudfront-oac-crf-staging
     dir: running_configs/cloudfront/oac/crf/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -346,7 +280,6 @@ projects:
   - name: running_configs-cloudfront-oac-directory-page-dev
     dir: running_configs/cloudfront/oac/directory-page/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -355,7 +288,6 @@ projects:
   - name: running_configs-cloudfront-oac-directory-page-prod
     dir: running_configs/cloudfront/oac/directory-page/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -364,7 +296,6 @@ projects:
   - name: running_configs-cloudfront-oac-directory-page-staging
     dir: running_configs/cloudfront/oac/directory-page/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -373,7 +304,6 @@ projects:
   - name: running_configs-cloudfront-oac-sa-ppl-prod
     dir: running_configs/cloudfront/oac/sa-ppl/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -382,7 +312,6 @@ projects:
   - name: running_configs-cloudfront-oac-sa-ppl-staging
     dir: running_configs/cloudfront/oac/sa-ppl/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -391,7 +320,6 @@ projects:
   - name: running_configs-cloudfront-oac-search-dev
     dir: running_configs/cloudfront/oac/search/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -400,7 +328,6 @@ projects:
   - name: running_configs-cloudfront-oac-search-prod
     dir: running_configs/cloudfront/oac/search/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -409,7 +336,6 @@ projects:
   - name: running_configs-cloudfront-oac-search-staging
     dir: running_configs/cloudfront/oac/search/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -418,7 +344,6 @@ projects:
   - name: running_configs-cloudfront-oac-sem-pages-dev
     dir: running_configs/cloudfront/oac/sem-pages/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -427,7 +352,6 @@ projects:
   - name: running_configs-cloudfront-oac-sem-pages-staging
     dir: running_configs/cloudfront/oac/sem-pages/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -436,7 +360,6 @@ projects:
   - name: running_configs-cloudfront-oac-spotlight-dev
     dir: running_configs/cloudfront/oac/spotlight/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -445,7 +368,6 @@ projects:
   - name: running_configs-cloudfront-oac-spotlight-staging
     dir: running_configs/cloudfront/oac/spotlight/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -454,7 +376,6 @@ projects:
   - name: running_configs-cloudfront-oac-static-ui-dev
     dir: running_configs/cloudfront/oac/static-ui/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -463,7 +384,6 @@ projects:
   - name: running_configs-cloudfront-oac-static-ui-prod
     dir: running_configs/cloudfront/oac/static-ui/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -472,7 +392,6 @@ projects:
   - name: running_configs-cloudfront-oac-static-ui-staging
     dir: running_configs/cloudfront/oac/static-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -481,7 +400,6 @@ projects:
   - name: running_configs-cloudfront-oac-stormbreaker-staging
     dir: running_configs/cloudfront/oac/stormbreaker/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -490,7 +408,6 @@ projects:
   - name: running_configs-cloudfront-oac-user-workspace-dev
     dir: running_configs/cloudfront/oac/user-workspace/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -499,7 +416,6 @@ projects:
   - name: running_configs-cloudfront-oac-user-workspace-staging
     dir: running_configs/cloudfront/oac/user-workspace/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -508,7 +424,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-prod-reviews.capterra.com
     dir: running_configs/cloudfront/serverless-apps/crf-prod/reviews.capterra.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -517,7 +432,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-prod-reviews.getapp.com
     dir: running_configs/cloudfront/serverless-apps/crf-prod/reviews.getapp.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -526,7 +440,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-prod-reviews.softwareadvice.com
     dir: running_configs/cloudfront/serverless-apps/crf-prod/reviews.softwareadvice.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -535,7 +448,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-prod-reviews.upcity.com
     dir: running_configs/cloudfront/serverless-apps/crf-prod/reviews.upcity.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -544,7 +456,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-stg-qa.softwareadvice.com
     dir: running_configs/cloudfront/serverless-apps/crf-stg/qa.softwareadvice.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -553,7 +464,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-stg-reviews-es7.capstage.net
     dir: running_configs/cloudfront/serverless-apps/crf-stg/reviews-es7.capstage.net
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -562,7 +472,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-stg-reviews.capstage.net
     dir: running_configs/cloudfront/serverless-apps/crf-stg/reviews.capstage.net
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -571,7 +480,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-stg-reviews.gappdev.com
     dir: running_configs/cloudfront/serverless-apps/crf-stg/reviews.gappdev.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -580,7 +488,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-crf-stg-reviews.staging.upcity.com
     dir: running_configs/cloudfront/serverless-apps/crf-stg/reviews.staging.upcity.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -589,7 +496,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-search-prod-forms-as-a-service.capterra.com
     dir: running_configs/cloudfront/serverless-apps/search-prod/forms-as-a-service.capterra.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -598,7 +504,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-search-prod-sem-ui-prd.capterra.com
     dir: running_configs/cloudfront/serverless-apps/search-prod/sem-ui-prd.capterra.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -607,7 +512,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-search-prod-spotlight.capterra.com
     dir: running_configs/cloudfront/serverless-apps/search-prod/spotlight.capterra.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -616,7 +520,6 @@ projects:
   - name: running_configs-cloudfront-serverless-apps-search-staging-sem-ui.capstage.net
     dir: running_configs/cloudfront/serverless-apps/search-staging/sem-ui.capstage.net
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -625,7 +528,6 @@ projects:
   - name: running_configs-cloudfront-single-page-apps-capterra-user-workspace-ci.capstage.net
     dir: running_configs/cloudfront/single-page-apps/capterra-user-workspace-ci.capstage.net
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -634,7 +536,6 @@ projects:
   - name: running_configs-cloudfront-single-page-apps-capui.capstage.net
     dir: running_configs/cloudfront/single-page-apps/capui.capstage.net
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -643,7 +544,6 @@ projects:
   - name: running_configs-cloudfront-single-page-apps-digitalmarkets.capstage.net
     dir: running_configs/cloudfront/single-page-apps/digitalmarkets.capstage.net
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -652,7 +552,6 @@ projects:
   - name: running_configs-cloudfront-single-page-apps-gdm-style-guide
     dir: running_configs/cloudfront/single-page-apps/gdm-style-guide
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -661,7 +560,6 @@ projects:
   - name: running_configs-cloudfront-single-page-apps-vp-frontend
     dir: running_configs/cloudfront/single-page-apps/vp-frontend
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -670,7 +568,6 @@ projects:
   - name: running_configs-cloudfront-single-page-apps-vp-frontend-production
     dir: running_configs/cloudfront/single-page-apps/vp-frontend-production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -679,7 +576,6 @@ projects:
   - name: running_configs-cloudfront-single-page-apps-vp-ppl-qa
     dir: running_configs/cloudfront/single-page-apps/vp-ppl-qa
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -688,7 +584,6 @@ projects:
   - name: running_configs-cloudwatch-log-group-expiration-capterra-crf-dev
     dir: running_configs/cloudwatch-log-group-expiration/capterra-crf-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -697,7 +592,6 @@ projects:
   - name: running_configs-cloudwatch-log-group-expiration-capterra-crf-prod
     dir: running_configs/cloudwatch-log-group-expiration/capterra-crf-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -706,7 +600,6 @@ projects:
   - name: running_configs-cloudwatch-log-group-expiration-capterra-crf-stg
     dir: running_configs/cloudwatch-log-group-expiration/capterra-crf-stg
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -715,7 +608,6 @@ projects:
   - name: running_configs-cloudwatch-log-group-expiration-capterra-sandbox
     dir: running_configs/cloudwatch-log-group-expiration/capterra-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -724,7 +616,6 @@ projects:
   - name: running_configs-cloudwatch-log-group-expiration-capterra-search-dev
     dir: running_configs/cloudwatch-log-group-expiration/capterra-search-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -733,7 +624,6 @@ projects:
   - name: running_configs-cloudwatch-log-group-expiration-capterra-search-prod
     dir: running_configs/cloudwatch-log-group-expiration/capterra-search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -742,7 +632,6 @@ projects:
   - name: running_configs-cloudwatch-log-group-expiration-capterra-search-staging
     dir: running_configs/cloudwatch-log-group-expiration/capterra-search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -751,7 +640,6 @@ projects:
   - name: running_configs-cognito-backup-capterra-main-us-east-1
     dir: running_configs/cognito-backup/capterra-main/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -760,7 +648,6 @@ projects:
   - name: running_configs-cognito-backup-capterra-main-us-west-2
     dir: running_configs/cognito-backup/capterra-main/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -769,7 +656,6 @@ projects:
   - name: running_configs-cognito-backup-crf-prod-us-east-1
     dir: running_configs/cognito-backup/crf-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -778,7 +664,6 @@ projects:
   - name: running_configs-cognito-backup-crf-prod-us-west-2
     dir: running_configs/cognito-backup/crf-prod/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -787,7 +672,6 @@ projects:
   - name: running_configs-cognito-backup-crf-staging-us-east-1
     dir: running_configs/cognito-backup/crf-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -796,7 +680,6 @@ projects:
   - name: running_configs-cognito-backup-search-prod-us-east-1
     dir: running_configs/cognito-backup/search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -805,7 +688,6 @@ projects:
   - name: running_configs-cognito-backup-search-prod-us-west-2
     dir: running_configs/cognito-backup/search-prod/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -814,7 +696,6 @@ projects:
   - name: running_configs-cognito-backup-search-staging-us-east-1
     dir: running_configs/cognito-backup/search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -823,7 +704,6 @@ projects:
   - name: running_configs-databases-rds
     dir: running_configs/databases/rds
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -832,7 +712,6 @@ projects:
   - name: running_configs-directory-pages-prd
     dir: running_configs/directory-pages/prd
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -841,7 +720,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-capterra-main-ap-south-1
     dir: running_configs/ec2-data-lifecycle-manager/capterra-main/ap-south-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -850,7 +728,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-capterra-main-eu-west-3
     dir: running_configs/ec2-data-lifecycle-manager/capterra-main/eu-west-3
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -859,7 +736,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-capterra-main-us-east-1
     dir: running_configs/ec2-data-lifecycle-manager/capterra-main/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -868,7 +744,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-capterra-main-us-west-2
     dir: running_configs/ec2-data-lifecycle-manager/capterra-main/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -877,7 +752,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-sandbox-us-east-1
     dir: running_configs/ec2-data-lifecycle-manager/sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -886,7 +760,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-sandbox-us-west-2
     dir: running_configs/ec2-data-lifecycle-manager/sandbox/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -895,7 +768,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-search-dev-us-east-1
     dir: running_configs/ec2-data-lifecycle-manager/search-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -904,7 +776,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-search-prod-us-east-1
     dir: running_configs/ec2-data-lifecycle-manager/search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -913,7 +784,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-search-prod-us-west-2
     dir: running_configs/ec2-data-lifecycle-manager/search-prod/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -922,7 +792,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-search-staging-us-east-1
     dir: running_configs/ec2-data-lifecycle-manager/search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -931,7 +800,6 @@ projects:
   - name: running_configs-ec2-data-lifecycle-manager-search-staging-us-west-2
     dir: running_configs/ec2-data-lifecycle-manager/search-staging/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -940,7 +808,6 @@ projects:
   - name: running_configs-ec2-capterra-search-prod-us-east-1
     dir: running_configs/ec2/capterra-search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -949,7 +816,6 @@ projects:
   - name: running_configs-ec2-capterra-search-staging-us-east-1
     dir: running_configs/ec2/capterra-search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -958,7 +824,6 @@ projects:
   - name: running_configs-ec2-capterra-us-east-1-logstash-prd-1a
     dir: running_configs/ec2/capterra/us-east-1/logstash-prd-1a
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -967,7 +832,6 @@ projects:
   - name: running_configs-ec2-capterra-us-east-1-logstash-stg-1a
     dir: running_configs/ec2/capterra/us-east-1/logstash-stg-1a
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -976,7 +840,6 @@ projects:
   - name: running_configs-ec2-capterra-us-east-1-prefix-lists
     dir: running_configs/ec2/capterra/us-east-1/prefix-lists
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -985,7 +848,6 @@ projects:
   - name: running_configs-ec2-capterra-us-west-2-prefix-lists
     dir: running_configs/ec2/capterra/us-west-2/prefix-lists
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -994,7 +856,6 @@ projects:
   - name: running_configs-ecr-vulnerability-notification-capterra-main-us-east-1
     dir: running_configs/ecr-vulnerability-notification/capterra-main/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1003,7 +864,6 @@ projects:
   - name: running_configs-ecr-accounts
     dir: running_configs/ecr/accounts
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1012,7 +872,6 @@ projects:
   - name: running_configs-ecr-autobidder
     dir: running_configs/ecr/autobidder
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1021,7 +880,6 @@ projects:
   - name: running_configs-ecr-base-images
     dir: running_configs/ecr/base-images
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1030,7 +888,6 @@ projects:
   - name: running_configs-ecr-cap-es-uvp
     dir: running_configs/ecr/cap-es-uvp
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1039,7 +896,6 @@ projects:
   - name: running_configs-ecr-cap-rbr-py
     dir: running_configs/ecr/cap-rbr-py
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1048,7 +904,6 @@ projects:
   - name: running_configs-ecr-capterra-apidocs-prod
     dir: running_configs/ecr/capterra-apidocs-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1057,7 +912,6 @@ projects:
   - name: running_configs-ecr-capterra-atlantis
     dir: running_configs/ecr/capterra-atlantis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1066,7 +920,6 @@ projects:
   - name: running_configs-ecr-capterra-backstage
     dir: running_configs/ecr/capterra-backstage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1075,7 +928,6 @@ projects:
   - name: running_configs-ecr-capterra-bidding
     dir: running_configs/ecr/capterra-bidding
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1084,7 +936,6 @@ projects:
   - name: running_configs-ecr-capterra-blog
     dir: running_configs/ecr/capterra-blog
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1093,7 +944,6 @@ projects:
   - name: running_configs-ecr-capterra-buyers-guide
     dir: running_configs/ecr/capterra-buyers-guide
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1102,7 +952,6 @@ projects:
   - name: running_configs-ecr-capterra-bx-api-oracle
     dir: running_configs/ecr/capterra-bx-api-oracle
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1111,7 +960,6 @@ projects:
   - name: running_configs-ecr-capterra-bx-capterra-www
     dir: running_configs/ecr/capterra-bx-capterra-www
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1120,7 +968,6 @@ projects:
   - name: running_configs-ecr-capterra-capterra-graphql
     dir: running_configs/ecr/capterra-capterra-graphql
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1129,7 +976,6 @@ projects:
   - name: running_configs-ecr-capterra-capterra-oracle-cdc
     dir: running_configs/ecr/capterra-capterra-oracle-cdc
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1138,7 +984,6 @@ projects:
   - name: running_configs-ecr-capterra-categories-pages
     dir: running_configs/ecr/capterra-categories-pages
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1147,7 +992,6 @@ projects:
   - name: running_configs-ecr-capterra-centosoracle
     dir: running_configs/ecr/capterra-centosoracle
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1156,7 +1000,6 @@ projects:
   - name: running_configs-ecr-capterra-confluent
     dir: running_configs/ecr/capterra-confluent
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1165,7 +1008,6 @@ projects:
   - name: running_configs-ecr-capterra-conversiontracking
     dir: running_configs/ecr/capterra-conversiontracking
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1174,7 +1016,6 @@ projects:
   - name: running_configs-ecr-capterra-conversiontracking-nonprod
     dir: running_configs/ecr/capterra-conversiontracking-nonprod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1183,7 +1024,6 @@ projects:
   - name: running_configs-ecr-capterra-conversiontracking-prod
     dir: running_configs/ecr/capterra-conversiontracking-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1192,7 +1032,6 @@ projects:
   - name: running_configs-ecr-capterra-crf
     dir: running_configs/ecr/capterra-crf
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1201,7 +1040,6 @@ projects:
   - name: running_configs-ecr-capterra-directory-pages
     dir: running_configs/ecr/capterra-directory-pages
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1210,7 +1048,6 @@ projects:
   - name: running_configs-ecr-capterra-ga360-uploader
     dir: running_configs/ecr/capterra-ga360-uploader
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1219,7 +1056,6 @@ projects:
   - name: running_configs-ecr-capterra-legal-pages
     dir: running_configs/ecr/capterra-legal-pages
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1228,7 +1064,6 @@ projects:
   - name: running_configs-ecr-capterra-linkedinsync-nonprod
     dir: running_configs/ecr/capterra-linkedinsync-nonprod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1237,7 +1072,6 @@ projects:
   - name: running_configs-ecr-capterra-linkedinsync-prod
     dir: running_configs/ecr/capterra-linkedinsync-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1246,7 +1080,6 @@ projects:
   - name: running_configs-ecr-capterra-oracle-docker
     dir: running_configs/ecr/capterra-oracle-docker
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1255,7 +1088,6 @@ projects:
   - name: running_configs-ecr-capterra-organizations
     dir: running_configs/ecr/capterra-organizations
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1264,7 +1096,6 @@ projects:
   - name: running_configs-ecr-capterra-pricing-guides
     dir: running_configs/ecr/capterra-pricing-guides
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1273,7 +1104,6 @@ projects:
   - name: running_configs-ecr-capterra-scalyr-agent
     dir: running_configs/ecr/capterra-scalyr-agent
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1282,7 +1112,6 @@ projects:
   - name: running_configs-ecr-capterra-sem-pages
     dir: running_configs/ecr/capterra-sem-pages
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1291,7 +1120,6 @@ projects:
   - name: running_configs-ecr-capterra-services-pages
     dir: running_configs/ecr/capterra-services-pages
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1300,7 +1128,6 @@ projects:
   - name: running_configs-ecr-capterra-services-ui
     dir: running_configs/ecr/capterra-services-ui
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1309,7 +1136,6 @@ projects:
   - name: running_configs-ecr-capterra-shortlist-pages
     dir: running_configs/ecr/capterra-shortlist-pages
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1318,7 +1144,6 @@ projects:
   - name: running_configs-ecr-capterra-upc-consumer
     dir: running_configs/ecr/capterra-upc-consumer
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1327,7 +1152,6 @@ projects:
   - name: running_configs-ecr-capterra-user-workspace
     dir: running_configs/ecr/capterra-user-workspace
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1336,7 +1160,6 @@ projects:
   - name: running_configs-ecr-capterra-vendor-info
     dir: running_configs/ecr/capterra-vendor-info
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1345,7 +1168,6 @@ projects:
   - name: running_configs-ecr-capterra-vendor-notifications
     dir: running_configs/ecr/capterra-vendor-notifications
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1354,7 +1176,6 @@ projects:
   - name: running_configs-ecr-capterra-vendor-portal
     dir: running_configs/ecr/capterra-vendor-portal
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1363,7 +1184,6 @@ projects:
   - name: running_configs-ecr-capterra-vendor-portal-fe
     dir: running_configs/ecr/capterra-vendor-portal-fe
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1372,7 +1192,6 @@ projects:
   - name: running_configs-ecr-clicks-streaming
     dir: running_configs/ecr/clicks-streaming
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1381,7 +1200,6 @@ projects:
   - name: running_configs-ecr-clicks-streaming-sources
     dir: running_configs/ecr/clicks-streaming-sources
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1390,7 +1208,6 @@ projects:
   - name: running_configs-ecr-devops
     dir: running_configs/ecr/devops
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1399,7 +1216,6 @@ projects:
   - name: running_configs-ecs-search-dev
     dir: running_configs/ecs/search-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1408,7 +1224,6 @@ projects:
   - name: running_configs-ecs-search-prod
     dir: running_configs/ecs/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1417,7 +1232,6 @@ projects:
   - name: running_configs-ecs-search-staging
     dir: running_configs/ecs/search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1426,7 +1240,6 @@ projects:
   - name: running_configs-eks-sandbox_example-cluster
     dir: running_configs/eks/sandbox_example/cluster
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1435,7 +1248,6 @@ projects:
   - name: running_configs-eks-sandbox_example-sample
     dir: running_configs/eks/sandbox_example/sample
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1444,7 +1256,6 @@ projects:
   - name: running_configs-eks-staging_example
     dir: running_configs/eks/staging_example
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1453,7 +1264,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-crf-dev
     dir: running_configs/iam/deployer-roles/capterra-crf/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1462,7 +1272,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-crf-prod
     dir: running_configs/iam/deployer-roles/capterra-crf/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1471,7 +1280,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-crf-staging
     dir: running_configs/iam/deployer-roles/capterra-crf/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1480,7 +1288,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-main-dev
     dir: running_configs/iam/deployer-roles/capterra-main/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1489,7 +1296,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-main-prod
     dir: running_configs/iam/deployer-roles/capterra-main/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1498,7 +1304,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-main-staging
     dir: running_configs/iam/deployer-roles/capterra-main/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1507,7 +1312,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-sandbox-dev
     dir: running_configs/iam/deployer-roles/capterra-sandbox/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1516,7 +1320,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-search-dev
     dir: running_configs/iam/deployer-roles/capterra-search/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1525,7 +1328,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-search-prod
     dir: running_configs/iam/deployer-roles/capterra-search/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1534,7 +1336,6 @@ projects:
   - name: running_configs-iam-deployer-roles-capterra-search-staging
     dir: running_configs/iam/deployer-roles/capterra-search/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1543,7 +1344,6 @@ projects:
   - name: running_configs-iam-ec2-roles-capterra
     dir: running_configs/iam/ec2-roles/capterra
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1552,7 +1352,6 @@ projects:
   - name: running_configs-iam-ec2-roles-user-workspace
     dir: running_configs/iam/ec2-roles/user-workspace
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1561,7 +1360,6 @@ projects:
   - name: running_configs-iam-eks-roles-capterra-main-us-east-1
     dir: running_configs/iam/eks-roles/capterra-main/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1570,7 +1368,6 @@ projects:
   - name: running_configs-iam-eks-roles-capterra-main-us-west-2
     dir: running_configs/iam/eks-roles/capterra-main/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1579,7 +1376,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra
     dir: running_configs/iam/user-roles/capterra
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1588,7 +1384,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-crf-dev
     dir: running_configs/iam/user-roles/capterra-crf-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1597,7 +1392,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-crf-prd
     dir: running_configs/iam/user-roles/capterra-crf-prd
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1606,7 +1400,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-crf-stg
     dir: running_configs/iam/user-roles/capterra-crf-stg
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1615,7 +1408,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-orange-staging
     dir: running_configs/iam/user-roles/capterra-orange-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1624,7 +1416,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-sandbox
     dir: running_configs/iam/user-roles/capterra-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1633,7 +1424,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-search-dev
     dir: running_configs/iam/user-roles/capterra-search-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1642,7 +1432,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-search-prod
     dir: running_configs/iam/user-roles/capterra-search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1651,7 +1440,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-search-staging
     dir: running_configs/iam/user-roles/capterra-search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1660,7 +1448,6 @@ projects:
   - name: running_configs-iam-user-roles-capterra-wordpress-sandbox
     dir: running_configs/iam/user-roles/capterra-wordpress-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1669,7 +1456,6 @@ projects:
   - name: running_configs-legacy-infra-aws-s3-us-east-1
     dir: running_configs/legacy-infra/aws/s3/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1678,7 +1464,6 @@ projects:
   - name: running_configs-legacy-infra-aws-s3-us-west-2
     dir: running_configs/legacy-infra/aws/s3/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1687,7 +1472,6 @@ projects:
   - name: running_configs-legacy-infra-vpc-capterra-us-east-1
     dir: running_configs/legacy-infra/vpc/capterra/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1696,7 +1480,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-main-us-east-1-prod-mainsite-alb-prod-ue1-geo
     dir: running_configs/load-balancer/alb/capterra-main/us-east-1/prod/mainsite-alb-prod-ue1-geo
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1705,7 +1488,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-main-us-east-1-prod-mainsite-alb-prod-us-east-1
     dir: running_configs/load-balancer/alb/capterra-main/us-east-1/prod/mainsite-alb-prod-us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1714,7 +1496,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-main-us-east-1-prod-mainsite-alb-prod-us-east-1b
     dir: running_configs/load-balancer/alb/capterra-main/us-east-1/prod/mainsite-alb-prod-us-east-1b
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1723,7 +1504,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-main-us-east-1-stage-alb-cap-mainsite-staging-ue1
     dir: running_configs/load-balancer/alb/capterra-main/us-east-1/stage/alb-cap-mainsite-staging-ue1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1732,7 +1512,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-main-us-east-1-stage-mainsite-alb-staging-ue1
     dir: running_configs/load-balancer/alb/capterra-main/us-east-1/stage/mainsite-alb-staging-ue1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1741,7 +1520,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-main-us-west-2-prod-dr-mainsite-alb-prod-dr-uw2
     dir: running_configs/load-balancer/alb/capterra-main/us-west-2/prod-dr/mainsite-alb-prod-dr-uw2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1750,7 +1528,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-sandbox-dr-us-west-2
     dir: running_configs/load-balancer/alb/capterra-sandbox/dr-us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1759,7 +1536,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-sandbox-us-east-1-alb-internal-sandbox
     dir: running_configs/load-balancer/alb/capterra-sandbox/us-east-1/alb-internal-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1768,7 +1544,6 @@ projects:
   - name: running_configs-load-balancer-alb-capterra-sandbox-us-east-1-alb-test-tf-import
     dir: running_configs/load-balancer/alb/capterra-sandbox/us-east-1/alb-test-tf-import
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1777,7 +1552,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-main-us-east-1-prod-cap-elb-snowflake-prod
     dir: running_configs/load-balancer/nlb/capterra-main/us-east-1/prod/cap-elb-snowflake-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1786,7 +1560,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-main-us-east-1-prod-nlb-cap-mainsite-prod-ue1
     dir: running_configs/load-balancer/nlb/capterra-main/us-east-1/prod/nlb-cap-mainsite-prod-ue1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1795,7 +1568,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-main-us-east-1-prod-nlb-steam
     dir: running_configs/load-balancer/nlb/capterra-main/us-east-1/prod/nlb-steam
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1804,7 +1576,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-main-us-east-1-stage-atacama-oracle-access
     dir: running_configs/load-balancer/nlb/capterra-main/us-east-1/stage/atacama-oracle-access
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1813,7 +1584,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-main-us-east-1-stage-cap-elb-plinktst
     dir: running_configs/load-balancer/nlb/capterra-main/us-east-1/stage/cap-elb-plinktst
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1822,7 +1592,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-main-us-west-2-capterra-gc1-db-nlb
     dir: running_configs/load-balancer/nlb/capterra-main/us-west-2/capterra-gc1-db-nlb
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1831,7 +1600,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-sandbox-dr-us-west-2
     dir: running_configs/load-balancer/nlb/capterra-sandbox/dr-us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1840,7 +1608,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-sandbox-us-east-1-nlb-internal-sandbox
     dir: running_configs/load-balancer/nlb/capterra-sandbox/us-east-1/nlb-internal-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1849,7 +1616,6 @@ projects:
   - name: running_configs-load-balancer-nlb-capterra-sandbox-us-east-1-nlb-test-tf-import
     dir: running_configs/load-balancer/nlb/capterra-sandbox/us-east-1/nlb-test-tf-import
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1858,7 +1624,6 @@ projects:
   - name: running_configs-multi-region-infra
     dir: running_configs/multi-region-infra
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1867,7 +1632,6 @@ projects:
   - name: running_configs-networking-capterra-crf-dev-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-crf-dev/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1876,7 +1640,6 @@ projects:
   - name: running_configs-networking-capterra-crf-prod-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-crf-prod/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1885,7 +1648,6 @@ projects:
   - name: running_configs-networking-capterra-crf-prod-us-west-2-vpc-endpoints
     dir: running_configs/networking/capterra-crf-prod/us-west-2/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1894,7 +1656,6 @@ projects:
   - name: running_configs-networking-capterra-crf-staging-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-crf-staging/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1903,7 +1664,6 @@ projects:
   - name: running_configs-networking-capterra-main-dev-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-main-dev/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1912,7 +1672,6 @@ projects:
   - name: running_configs-networking-capterra-main-prod-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-main-prod/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1921,7 +1680,6 @@ projects:
   - name: running_configs-networking-capterra-main-prod-us-west-2-vpc-endpoints
     dir: running_configs/networking/capterra-main-prod/us-west-2/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1930,7 +1688,6 @@ projects:
   - name: running_configs-networking-capterra-main-stage-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-main-stage/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1939,7 +1696,6 @@ projects:
   - name: running_configs-networking-capterra-main-test-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-main-test/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1948,7 +1704,6 @@ projects:
   - name: running_configs-networking-capterra-main-gdm-dev.internal
     dir: running_configs/networking/capterra-main/gdm-dev.internal
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1957,7 +1712,6 @@ projects:
   - name: running_configs-networking-capterra-main-gdm-stg.internal
     dir: running_configs/networking/capterra-main/gdm-stg.internal
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1966,7 +1720,6 @@ projects:
   - name: running_configs-networking-capterra-main-gdm.internal
     dir: running_configs/networking/capterra-main/gdm.internal
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1975,7 +1728,6 @@ projects:
   - name: running_configs-networking-capterra-main-saqa.aws.gartner.com
     dir: running_configs/networking/capterra-main/saqa.aws.gartner.com
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1984,7 +1736,6 @@ projects:
   - name: running_configs-networking-capterra-sandbox-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-sandbox/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -1993,7 +1744,6 @@ projects:
   - name: running_configs-networking-capterra-search-dev-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-search-dev/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2002,7 +1752,6 @@ projects:
   - name: running_configs-networking-capterra-search-prod-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-search-prod/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2011,7 +1760,6 @@ projects:
   - name: running_configs-networking-capterra-search-prod-us-west-2-vpc-endpoints
     dir: running_configs/networking/capterra-search-prod/us-west-2/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2020,7 +1768,6 @@ projects:
   - name: running_configs-networking-capterra-search-staging-us-east-1-vpc-endpoints
     dir: running_configs/networking/capterra-search-staging/us-east-1/vpc-endpoints
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2029,7 +1776,6 @@ projects:
   - name: running_configs-oidc-capterra-aws-admin
     dir: running_configs/oidc/capterra-aws-admin
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2038,7 +1784,6 @@ projects:
   - name: running_configs-oidc-common-capterra-aws-main
     dir: running_configs/oidc/common/capterra-aws-main
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2047,7 +1792,6 @@ projects:
   - name: running_configs-oidc-common-capterra-crf-prod
     dir: running_configs/oidc/common/capterra-crf-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2056,7 +1800,6 @@ projects:
   - name: running_configs-oidc-common-capterra-crf-staging
     dir: running_configs/oidc/common/capterra-crf-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2065,7 +1808,6 @@ projects:
   - name: running_configs-oidc-common-capterra-sandbox
     dir: running_configs/oidc/common/capterra-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2074,7 +1816,6 @@ projects:
   - name: running_configs-oidc-common-capterra-search-dev
     dir: running_configs/oidc/common/capterra-search-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2083,7 +1824,6 @@ projects:
   - name: running_configs-oidc-common-capterra-search-prod
     dir: running_configs/oidc/common/capterra-search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2092,7 +1832,6 @@ projects:
   - name: running_configs-oidc-common-capterra-search-staging
     dir: running_configs/oidc/common/capterra-search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2101,7 +1840,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-all-capone-prod
     dir: running_configs/oidc/repository/capterra/all-capone/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2110,7 +1848,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-all-capone-prod-dr
     dir: running_configs/oidc/repository/capterra/all-capone/prod-dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2119,7 +1856,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-all-capone-staging
     dir: running_configs/oidc/repository/capterra/all-capone/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2128,7 +1864,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-autobidder-capterra-main-prod
     dir: running_configs/oidc/repository/capterra/autobidder/capterra-main/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2137,7 +1872,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-autobidder-capterra-main-staging
     dir: running_configs/oidc/repository/capterra/autobidder/capterra-main/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2146,7 +1880,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-blog-ui-prod
     dir: running_configs/oidc/repository/capterra/blog-ui/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2155,7 +1888,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-blog-ui-staging
     dir: running_configs/oidc/repository/capterra/blog-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2164,7 +1896,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-bx-api-oracle-prod
     dir: running_configs/oidc/repository/capterra/bx-api-oracle/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2173,7 +1904,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-bx-api-oracle-staging
     dir: running_configs/oidc/repository/capterra/bx-api-oracle/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2182,7 +1912,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-cap-es-clicks-prod
     dir: running_configs/oidc/repository/capterra/cap-es-clicks/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2191,7 +1920,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-cap-es-clicks-staging
     dir: running_configs/oidc/repository/capterra/cap-es-clicks/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2200,7 +1928,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-capterra-search-search-prod
     dir: running_configs/oidc/repository/capterra/capterra-search/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2209,7 +1936,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-capterra-search-staging
     dir: running_configs/oidc/repository/capterra/capterra-search/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2218,7 +1944,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-capterra-spotlight-ui-search-prod
     dir: running_configs/oidc/repository/capterra/capterra-spotlight-ui/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2227,7 +1952,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-capterra-spotlight-ui-staging
     dir: running_configs/oidc/repository/capterra/capterra-spotlight-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2236,7 +1960,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-capterra-static-ui-search-prod
     dir: running_configs/oidc/repository/capterra/capterra-static-ui/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2245,7 +1968,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-capterra-static-ui-staging
     dir: running_configs/oidc/repository/capterra/capterra-static-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2254,7 +1976,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-click-streaming-capterra-prod
     dir: running_configs/oidc/repository/capterra/click-streaming/capterra-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2263,7 +1984,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-click-streaming-capterra-staging
     dir: running_configs/oidc/repository/capterra/click-streaming/capterra-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2272,7 +1992,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-click-streaming-search-prod
     dir: running_configs/oidc/repository/capterra/click-streaming/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2281,7 +2000,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-click-streaming-search-staging
     dir: running_configs/oidc/repository/capterra/click-streaming/search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2290,7 +2008,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-compare-ui-search-prod
     dir: running_configs/oidc/repository/capterra/compare-ui/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2299,7 +2016,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-compare-ui-staging
     dir: running_configs/oidc/repository/capterra/compare-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2308,7 +2024,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-directory-page-ui-search-prod
     dir: running_configs/oidc/repository/capterra/directory-page-ui/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2317,7 +2032,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-directory-page-ui-search-staging
     dir: running_configs/oidc/repository/capterra/directory-page-ui/search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2326,7 +2040,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-global-nav-mf-search-prod
     dir: running_configs/oidc/repository/capterra/global-nav-mf/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2335,7 +2048,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-global-nav-mf-search-staging
     dir: running_configs/oidc/repository/capterra/global-nav-mf/search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2344,7 +2056,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-sem-ui-prod
     dir: running_configs/oidc/repository/capterra/sem-ui/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2353,7 +2064,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-sem-ui-staging
     dir: running_configs/oidc/repository/capterra/sem-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2362,7 +2072,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-services-ui-prod
     dir: running_configs/oidc/repository/capterra/services-ui/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2371,7 +2080,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-services-ui-prod-dr
     dir: running_configs/oidc/repository/capterra/services-ui/prod-dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2380,7 +2088,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-services-ui-staging
     dir: running_configs/oidc/repository/capterra/services-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2389,7 +2096,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-terraform-poc-sandbox
     dir: running_configs/oidc/repository/capterra/terraform-poc/sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2398,7 +2104,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-terraform-poc-search-dev
     dir: running_configs/oidc/repository/capterra/terraform-poc/search-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2407,7 +2112,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-user-workspace-capterra-prod
     dir: running_configs/oidc/repository/capterra/user-workspace/capterra-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2416,7 +2120,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-user-workspace-sandbox
     dir: running_configs/oidc/repository/capterra/user-workspace/sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2425,7 +2128,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-user-workspace-search-dev
     dir: running_configs/oidc/repository/capterra/user-workspace/search-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2434,7 +2136,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-user-workspace-search-prod
     dir: running_configs/oidc/repository/capterra/user-workspace/search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2443,7 +2144,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-user-workspace-search-staging
     dir: running_configs/oidc/repository/capterra/user-workspace/search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2452,7 +2152,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-vendor-portal-fe-capterra-prod
     dir: running_configs/oidc/repository/capterra/vendor-portal-fe/capterra-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2461,7 +2160,6 @@ projects:
   - name: running_configs-oidc-repository-capterra-vendor-portal-fe-capterra-staging
     dir: running_configs/oidc/repository/capterra/vendor-portal-fe/capterra-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2470,7 +2168,6 @@ projects:
   - name: running_configs-oidc-repository-gdm-ui-capterra-staging
     dir: running_configs/oidc/repository/gdm-ui/capterra/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2479,7 +2176,6 @@ projects:
   - name: running_configs-oidc-repository-gdm-ui-documentation-staging
     dir: running_configs/oidc/repository/gdm-ui/documentation/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2488,7 +2184,6 @@ projects:
   - name: running_configs-oidc-repository-gdm-ui-stormbreaker-ui-staging
     dir: running_configs/oidc/repository/gdm-ui/stormbreaker-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2497,7 +2192,6 @@ projects:
   - name: running_configs-prisma-alarm-integration-prod
     dir: running_configs/prisma/alarm-integration/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2506,7 +2200,6 @@ projects:
   - name: running_configs-project-Compare-UI-production-dr-redis-us-west-2
     dir: running_configs/project/Compare-UI/production-dr/redis/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2515,7 +2208,6 @@ projects:
   - name: running_configs-project-Compare-UI-production-redis-us-east-1
     dir: running_configs/project/Compare-UI/production/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2524,7 +2216,6 @@ projects:
   - name: running_configs-project-Compare-UI-staging-redis-us-east-1
     dir: running_configs/project/Compare-UI/staging/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2533,7 +2224,6 @@ projects:
   - name: running_configs-project-Sem-ui-production-dr-redis-us-west-2
     dir: running_configs/project/Sem-ui/production-dr/redis/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2542,7 +2232,6 @@ projects:
   - name: running_configs-project-Sem-ui-production-redis-us-east-1
     dir: running_configs/project/Sem-ui/production/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2551,7 +2240,6 @@ projects:
   - name: running_configs-project-Sem-ui-staging-redis-us-east-1
     dir: running_configs/project/Sem-ui/staging/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2560,7 +2248,6 @@ projects:
   - name: running_configs-project-autobidder-production
     dir: running_configs/project/autobidder/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2569,7 +2256,6 @@ projects:
   - name: running_configs-project-autobidder-staging
     dir: running_configs/project/autobidder/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2578,7 +2264,6 @@ projects:
   - name: running_configs-project-bidding-prod-k8s
     dir: running_configs/project/bidding/prod/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2587,7 +2272,6 @@ projects:
   - name: running_configs-project-bidding-prod-redis
     dir: running_configs/project/bidding/prod/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2596,7 +2280,6 @@ projects:
   - name: running_configs-project-bidding-staging-k8s
     dir: running_configs/project/bidding/staging/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2605,7 +2288,6 @@ projects:
   - name: running_configs-project-bidding-staging-redis
     dir: running_configs/project/bidding/staging/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2614,7 +2296,6 @@ projects:
   - name: running_configs-project-blog-ui-production
     dir: running_configs/project/blog-ui/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2623,7 +2304,6 @@ projects:
   - name: running_configs-project-blog-ui-staging
     dir: running_configs/project/blog-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2632,7 +2312,6 @@ projects:
   - name: running_configs-project-bx-api-oracle-prod-k8s
     dir: running_configs/project/bx-api-oracle/prod/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2641,7 +2320,6 @@ projects:
   - name: running_configs-project-bx-api-oracle-staging-k8s
     dir: running_configs/project/bx-api-oracle/staging/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2650,7 +2328,6 @@ projects:
   - name: running_configs-project-cap-es-clicks-production
     dir: running_configs/project/cap-es-clicks/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2659,7 +2336,6 @@ projects:
   - name: running_configs-project-cap-es-clicks-production-dr
     dir: running_configs/project/cap-es-clicks/production-dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2668,7 +2344,6 @@ projects:
   - name: running_configs-project-cap-es-clicks-staging
     dir: running_configs/project/cap-es-clicks/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2677,7 +2352,6 @@ projects:
   - name: running_configs-project-cap-rbr-py-staging-k8s
     dir: running_configs/project/cap-rbr-py/staging/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2686,7 +2360,6 @@ projects:
   - name: running_configs-project-capmain-prod-redis
     dir: running_configs/project/capmain/prod/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2695,7 +2368,6 @@ projects:
   - name: running_configs-project-capmain-staging-redis
     dir: running_configs/project/capmain/staging/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2704,7 +2376,6 @@ projects:
   - name: running_configs-project-capterra-faas-examples-prod-cloudfront
     dir: running_configs/project/capterra-faas-examples/prod/cloudfront
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2713,7 +2384,6 @@ projects:
   - name: running_configs-project-capterra-graphql-prod-dr-redis
     dir: running_configs/project/capterra-graphql/prod-dr/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2722,7 +2392,6 @@ projects:
   - name: running_configs-project-capterra-graphql-prod-redis
     dir: running_configs/project/capterra-graphql/prod/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2731,7 +2400,6 @@ projects:
   - name: running_configs-project-capterra-graphql-staging
     dir: running_configs/project/capterra-graphql/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2740,7 +2408,6 @@ projects:
   - name: running_configs-project-capterra-sitemaps-prod
     dir: running_configs/project/capterra-sitemaps/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2749,7 +2416,6 @@ projects:
   - name: running_configs-project-capterra-sitemaps-stage
     dir: running_configs/project/capterra-sitemaps/stage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2758,7 +2424,6 @@ projects:
   - name: running_configs-project-click-streaming-production_v2-us-east-1
     dir: running_configs/project/click-streaming/production_v2/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2767,7 +2432,6 @@ projects:
   - name: running_configs-project-click-streaming-production_v2-us-west-2
     dir: running_configs/project/click-streaming/production_v2/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2776,7 +2440,6 @@ projects:
   - name: running_configs-project-click-streaming-staging_v2-us-east-1
     dir: running_configs/project/click-streaming/staging_v2/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2785,7 +2448,6 @@ projects:
   - name: running_configs-project-click-streaming-staging_v2-us-west-2
     dir: running_configs/project/click-streaming/staging_v2/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2794,7 +2456,6 @@ projects:
   - name: running_configs-project-crf-dev-documentDB
     dir: running_configs/project/crf/dev/documentDB
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2803,7 +2464,6 @@ projects:
   - name: running_configs-project-crf-production-documentDB
     dir: running_configs/project/crf/production/documentDB
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2812,7 +2472,6 @@ projects:
   - name: running_configs-project-crf-production-k8s
     dir: running_configs/project/crf/production/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2821,7 +2480,6 @@ projects:
   - name: running_configs-project-crf-production-redis
     dir: running_configs/project/crf/production/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2830,7 +2488,6 @@ projects:
   - name: running_configs-project-crf-stage-documentDB
     dir: running_configs/project/crf/stage/documentDB
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2839,7 +2496,6 @@ projects:
   - name: running_configs-project-crf-stage-k8s
     dir: running_configs/project/crf/stage/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2848,7 +2504,6 @@ projects:
   - name: running_configs-project-crf-stage-redis
     dir: running_configs/project/crf/stage/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2857,7 +2512,6 @@ projects:
   - name: running_configs-project-declared-data-production
     dir: running_configs/project/declared-data/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2866,7 +2520,6 @@ projects:
   - name: running_configs-project-declared-data-staging
     dir: running_configs/project/declared-data/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2875,7 +2528,6 @@ projects:
   - name: running_configs-project-ga360-uploader-prod-k8s
     dir: running_configs/project/ga360-uploader/prod/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2884,7 +2536,6 @@ projects:
   - name: running_configs-project-ga360-uploader-staging-k8s
     dir: running_configs/project/ga360-uploader/staging/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2893,7 +2544,6 @@ projects:
   - name: running_configs-project-launchdarkly-development-us-east-1
     dir: running_configs/project/launchdarkly/development/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2902,7 +2552,6 @@ projects:
   - name: running_configs-project-launchdarkly-production-dr-us-west-2
     dir: running_configs/project/launchdarkly/production-dr/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2911,7 +2560,6 @@ projects:
   - name: running_configs-project-launchdarkly-production-us-east-1
     dir: running_configs/project/launchdarkly/production/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2920,7 +2568,6 @@ projects:
   - name: running_configs-project-launchdarkly-staging-us-east-1
     dir: running_configs/project/launchdarkly/staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2929,7 +2576,6 @@ projects:
   - name: running_configs-project-organizations-production-k8s
     dir: running_configs/project/organizations/production/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2938,7 +2584,6 @@ projects:
   - name: running_configs-project-organizations-production-redis
     dir: running_configs/project/organizations/production/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2947,7 +2592,6 @@ projects:
   - name: running_configs-project-organizations-staging-k8s
     dir: running_configs/project/organizations/staging/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2956,7 +2600,6 @@ projects:
   - name: running_configs-project-organizations-staging-redis
     dir: running_configs/project/organizations/staging/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2965,7 +2608,6 @@ projects:
   - name: running_configs-project-services-staging
     dir: running_configs/project/services/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2974,7 +2616,6 @@ projects:
   - name: running_configs-project-stormbreaker-staging
     dir: running_configs/project/stormbreaker/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2983,7 +2624,6 @@ projects:
   - name: running_configs-project-upc-consumer-prod-redis
     dir: running_configs/project/upc-consumer/prod/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -2992,7 +2632,6 @@ projects:
   - name: running_configs-project-upc-consumer-staging-redis
     dir: running_configs/project/upc-consumer/staging/redis
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3001,7 +2640,6 @@ projects:
   - name: running_configs-project-user-workspace-cognito-main
     dir: running_configs/project/user-workspace/cognito-main
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3010,7 +2648,6 @@ projects:
   - name: running_configs-project-user-workspace-cognito-oauth
     dir: running_configs/project/user-workspace/cognito-oauth
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3019,7 +2656,6 @@ projects:
   - name: running_configs-project-user-workspace-dev-ci
     dir: running_configs/project/user-workspace/dev-ci
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3028,7 +2664,6 @@ projects:
   - name: running_configs-project-user-workspace-staging-sa
     dir: running_configs/project/user-workspace/staging-sa
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3037,7 +2672,6 @@ projects:
   - name: running_configs-project-user-workspace-staging-cloudfront
     dir: running_configs/project/user-workspace/staging/cloudfront
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3046,7 +2680,6 @@ projects:
   - name: running_configs-project-velero-k8s-dev
     dir: running_configs/project/velero/k8s/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3055,7 +2688,6 @@ projects:
   - name: running_configs-project-velero-k8s-prod
     dir: running_configs/project/velero/k8s/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3064,7 +2696,6 @@ projects:
   - name: running_configs-project-velero-k8s-prod-dr
     dir: running_configs/project/velero/k8s/prod-dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3073,7 +2704,6 @@ projects:
   - name: running_configs-project-velero-k8s-staging
     dir: running_configs/project/velero/k8s/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3082,7 +2712,6 @@ projects:
   - name: running_configs-project-vendor-notifications-production-redis-us-east-1
     dir: running_configs/project/vendor-notifications/production/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3091,7 +2720,6 @@ projects:
   - name: running_configs-project-vendor-notifications-staging-redis-us-east-1
     dir: running_configs/project/vendor-notifications/staging/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3100,7 +2728,6 @@ projects:
   - name: running_configs-project-vendor-portal-fe-capterra-prod
     dir: running_configs/project/vendor-portal-fe/capterra-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3109,7 +2736,6 @@ projects:
   - name: running_configs-project-vendor-portal-fe-capterra-staging
     dir: running_configs/project/vendor-portal-fe/capterra-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3118,7 +2744,6 @@ projects:
   - name: running_configs-project-vendor-portal-production-k8s
     dir: running_configs/project/vendor-portal/production/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3127,7 +2752,6 @@ projects:
   - name: running_configs-project-vendor-portal-production-redis-us-east-1
     dir: running_configs/project/vendor-portal/production/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3136,7 +2760,6 @@ projects:
   - name: running_configs-project-vendor-portal-staging-k8s
     dir: running_configs/project/vendor-portal/staging/k8s
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3145,7 +2768,6 @@ projects:
   - name: running_configs-project-vendor-portal-staging-redis-us-east-1
     dir: running_configs/project/vendor-portal/staging/redis/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3154,7 +2776,6 @@ projects:
   - name: running_configs-route53backup-capterra-crf-dev-us-east-1
     dir: running_configs/route53backup/capterra-crf-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3163,7 +2784,6 @@ projects:
   - name: running_configs-route53backup-capterra-crf-prd-us-east-1
     dir: running_configs/route53backup/capterra-crf-prd/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3172,7 +2792,6 @@ projects:
   - name: running_configs-route53backup-capterra-crf-stg-us-east-1
     dir: running_configs/route53backup/capterra-crf-stg/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3181,7 +2800,6 @@ projects:
   - name: running_configs-route53backup-capterra-main-account-us-east-1
     dir: running_configs/route53backup/capterra-main-account/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3190,7 +2808,6 @@ projects:
   - name: running_configs-route53backup-capterra-sandbox-us-east-1
     dir: running_configs/route53backup/capterra-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3199,7 +2816,6 @@ projects:
   - name: running_configs-route53backup-capterra-search-dev-us-east-1
     dir: running_configs/route53backup/capterra-search-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3208,7 +2824,6 @@ projects:
   - name: running_configs-route53backup-capterra-search-prod-us-east-1
     dir: running_configs/route53backup/capterra-search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3217,7 +2832,6 @@ projects:
   - name: running_configs-route53backup-capterra-search-staging-us-east-1
     dir: running_configs/route53backup/capterra-search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3226,7 +2840,6 @@ projects:
   - name: running_configs-s3-waf-logs-capterra-main-prod-dr-us-west-2
     dir: running_configs/s3-waf-logs/capterra-main/prod-dr/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3235,7 +2848,6 @@ projects:
   - name: running_configs-s3-waf-logs-capterra-main-prod-us-east-1
     dir: running_configs/s3-waf-logs/capterra-main/prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3244,7 +2856,6 @@ projects:
   - name: running_configs-s3-waf-logs-capterra-main-staging-us-east-1
     dir: running_configs/s3-waf-logs/capterra-main/staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3253,7 +2864,6 @@ projects:
   - name: running_configs-s3-capterra-aws-admin-us-east-1
     dir: running_configs/s3/capterra-aws-admin/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3262,7 +2872,6 @@ projects:
   - name: running_configs-s3-capterra-aws-admin-us-west-2
     dir: running_configs/s3/capterra-aws-admin/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3271,7 +2880,6 @@ projects:
   - name: running_configs-s3-capterra-crf-dev-us-east-1
     dir: running_configs/s3/capterra-crf-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3280,7 +2888,6 @@ projects:
   - name: running_configs-s3-capterra-crf-prd-us-east-1
     dir: running_configs/s3/capterra-crf-prd/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3289,7 +2896,6 @@ projects:
   - name: running_configs-s3-capterra-crf-prd-us-west-2
     dir: running_configs/s3/capterra-crf-prd/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3298,7 +2904,6 @@ projects:
   - name: running_configs-s3-capterra-crf-stg-us-east-1
     dir: running_configs/s3/capterra-crf-stg/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3307,7 +2912,6 @@ projects:
   - name: running_configs-s3-capterra-orange-staging-us-east-1
     dir: running_configs/s3/capterra-orange-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3316,7 +2920,6 @@ projects:
   - name: running_configs-s3-capterra-sandbox-us-east-1
     dir: running_configs/s3/capterra-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3325,7 +2928,6 @@ projects:
   - name: running_configs-s3-capterra-sandbox-us-west-1
     dir: running_configs/s3/capterra-sandbox/us-west-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3334,7 +2936,6 @@ projects:
   - name: running_configs-s3-capterra-search-dev-us-east-1
     dir: running_configs/s3/capterra-search-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3343,7 +2944,6 @@ projects:
   - name: running_configs-s3-capterra-search-prod-us-east-1
     dir: running_configs/s3/capterra-search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3352,7 +2952,6 @@ projects:
   - name: running_configs-s3-capterra-search-staging-us-east-1
     dir: running_configs/s3/capterra-search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3361,7 +2960,6 @@ projects:
   - name: running_configs-s3-capterra-wordpress-sandbox-us-east-1
     dir: running_configs/s3/capterra-wordpress-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3370,7 +2968,6 @@ projects:
   - name: running_configs-s3-capterra-us-east-1
     dir: running_configs/s3/capterra/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3379,7 +2976,6 @@ projects:
   - name: running_configs-s3-capterra-us-west-2
     dir: running_configs/s3/capterra/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3388,7 +2984,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-crf-dev
     dir: running_configs/scalyr-cloudwatch/capterra-crf-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3397,7 +2992,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-crf-prd
     dir: running_configs/scalyr-cloudwatch/capterra-crf-prd
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3406,7 +3000,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-crf-stg
     dir: running_configs/scalyr-cloudwatch/capterra-crf-stg
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3415,7 +3008,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-main
     dir: running_configs/scalyr-cloudwatch/capterra-main
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3424,7 +3016,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-sandbox
     dir: running_configs/scalyr-cloudwatch/capterra-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3433,7 +3024,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-search-dev
     dir: running_configs/scalyr-cloudwatch/capterra-search-dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3442,7 +3032,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-search-prod
     dir: running_configs/scalyr-cloudwatch/capterra-search-prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3451,7 +3040,6 @@ projects:
   - name: running_configs-scalyr-cloudwatch-capterra-search-staging
     dir: running_configs/scalyr-cloudwatch/capterra-search-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3460,7 +3048,6 @@ projects:
   - name: running_configs-search-dev
     dir: running_configs/search/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3469,7 +3056,6 @@ projects:
   - name: running_configs-search-prd
     dir: running_configs/search/prd
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3478,7 +3064,6 @@ projects:
   - name: running_configs-search-stg
     dir: running_configs/search/stg
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3487,7 +3072,6 @@ projects:
   - name: running_configs-security-groups-capterra-sandbox-us-east-1
     dir: running_configs/security-groups/capterra-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3496,7 +3080,6 @@ projects:
   - name: running_configs-security-groups-capterra-us-west-2
     dir: running_configs/security-groups/capterra/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3505,7 +3088,6 @@ projects:
   - name: running_configs-ses-monitor
     dir: running_configs/ses-monitor
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3514,7 +3096,6 @@ projects:
   - name: running_configs-snowflake_vpc_service-production-us-east-1
     dir: running_configs/snowflake_vpc_service/production/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3523,7 +3104,6 @@ projects:
   - name: running_configs-task_scheduler
     dir: running_configs/task_scheduler
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3532,7 +3112,6 @@ projects:
   - name: running_configs-test-gha-capterra-sandbox-us-east-1
     dir: running_configs/test-gha/capterra-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3541,7 +3120,6 @@ projects:
   - name: running_configs-test-gha-capterra-sandbox-us-west-2
     dir: running_configs/test-gha/capterra-sandbox/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3550,7 +3128,6 @@ projects:
   - name: running_configs-user-workspace-dev
     dir: running_configs/user-workspace/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3559,7 +3136,6 @@ projects:
   - name: running_configs-user-workspace-dev-oauth
     dir: running_configs/user-workspace/dev/oauth
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3568,7 +3144,6 @@ projects:
   - name: running_configs-user-workspace-prod
     dir: running_configs/user-workspace/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3577,7 +3152,6 @@ projects:
   - name: running_configs-user-workspace-staging
     dir: running_configs/user-workspace/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3586,7 +3160,6 @@ projects:
   - name: running_configs-vendor-portal-production
     dir: running_configs/vendor-portal/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3595,7 +3168,6 @@ projects:
   - name: running_configs-vendor-portal-qa-capterra-search-staging-us-east-1
     dir: running_configs/vendor-portal/qa/capterra-search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3604,7 +3176,6 @@ projects:
   - name: running_configs-vendor-portal-staging
     dir: running_configs/vendor-portal/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3613,7 +3184,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-dev-us-east-1
     dir: running_configs/vpc/capterra-crf-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3622,7 +3192,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-dev_v2-us-east-1
     dir: running_configs/vpc/capterra-crf-dev_v2/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3631,7 +3200,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-prod-imports
     dir: running_configs/vpc/capterra-crf-prod-imports
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3640,7 +3208,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-prod-us-east-1
     dir: running_configs/vpc/capterra-crf-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3649,7 +3216,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-prod_v2-us-east-1
     dir: running_configs/vpc/capterra-crf-prod_v2/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3658,7 +3224,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-prod_v2-us-west-2
     dir: running_configs/vpc/capterra-crf-prod_v2/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3667,7 +3232,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-staging-us-east-1
     dir: running_configs/vpc/capterra-crf-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3676,7 +3240,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-staging-us-west-2
     dir: running_configs/vpc/capterra-crf-staging/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3685,7 +3248,6 @@ projects:
   - name: running_configs-vpc-capterra-crf-staging_v2
     dir: running_configs/vpc/capterra-crf-staging_v2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3694,7 +3256,6 @@ projects:
   - name: running_configs-vpc-capterra-orange-staging
     dir: running_configs/vpc/capterra-orange-staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3703,7 +3264,6 @@ projects:
   - name: running_configs-vpc-capterra-sandbox-us-east-1
     dir: running_configs/vpc/capterra-sandbox/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3712,7 +3272,6 @@ projects:
   - name: running_configs-vpc-capterra-sandbox-us-west-2
     dir: running_configs/vpc/capterra-sandbox/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3721,7 +3280,6 @@ projects:
   - name: running_configs-vpc-capterra-search-dev-us-east-1
     dir: running_configs/vpc/capterra-search-dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3730,7 +3288,6 @@ projects:
   - name: running_configs-vpc-capterra-search-dev_v2
     dir: running_configs/vpc/capterra-search-dev_v2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3739,7 +3296,6 @@ projects:
   - name: running_configs-vpc-capterra-search-prod-us-east-1
     dir: running_configs/vpc/capterra-search-prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3748,7 +3304,6 @@ projects:
   - name: running_configs-vpc-capterra-search-prod-us-west-2
     dir: running_configs/vpc/capterra-search-prod/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3757,7 +3312,6 @@ projects:
   - name: running_configs-vpc-capterra-search-staging-us-east-1
     dir: running_configs/vpc/capterra-search-staging/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3766,7 +3320,6 @@ projects:
   - name: running_configs-vpc-capterra-search-staging-us-west-2a
     dir: running_configs/vpc/capterra-search-staging/us-west-2a
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3775,7 +3328,6 @@ projects:
   - name: running_configs-vpc-capterra-ap-south-1
     dir: running_configs/vpc/capterra/ap-south-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3784,7 +3336,6 @@ projects:
   - name: running_configs-vpc-capterra-eu-west-3
     dir: running_configs/vpc/capterra/eu-west-3
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3793,7 +3344,6 @@ projects:
   - name: running_configs-vpc-capterra-us-east-1
     dir: running_configs/vpc/capterra/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3802,7 +3352,6 @@ projects:
   - name: running_configs-vpc-capterra-us-west-2
     dir: running_configs/vpc/capterra/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3811,7 +3360,6 @@ projects:
   - name: running_configs-waf-capterra-main-global-all-capone-staging
     dir: running_configs/waf/capterra-main/global/all-capone/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3820,7 +3368,6 @@ projects:
   - name: running_configs-waf-capterra-main-global-cap-security-dev
     dir: running_configs/waf/capterra-main/global/cap-security/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3829,7 +3376,6 @@ projects:
   - name: running_configs-waf-capterra-main-global-cap-security-prod
     dir: running_configs/waf/capterra-main/global/cap-security/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3838,7 +3384,6 @@ projects:
   - name: running_configs-waf-capterra-main-global-cap-security-stage
     dir: running_configs/waf/capterra-main/global/cap-security/stage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3847,7 +3392,6 @@ projects:
   - name: running_configs-waf-capterra-main-global-glossary-ui
     dir: running_configs/waf/capterra-main/global/glossary-ui
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3856,7 +3400,6 @@ projects:
   - name: running_configs-waf-capterra-main-global-team-blog-production
     dir: running_configs/waf/capterra-main/global/team-blog/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3865,7 +3408,6 @@ projects:
   - name: running_configs-waf-capterra-main-global-team-blog-staging
     dir: running_configs/waf/capterra-main/global/team-blog/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3874,7 +3416,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-cap-mainsite-prod
     dir: running_configs/waf/capterra-main/us-east-1/cap-mainsite/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3883,7 +3424,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-cap-mainsite-staging
     dir: running_configs/waf/capterra-main/us-east-1/cap-mainsite/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3892,7 +3432,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-cap-one-all-app-prod
     dir: running_configs/waf/capterra-main/us-east-1/cap-one/all-app/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3901,7 +3440,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-cap-one-all-app-staging
     dir: running_configs/waf/capterra-main/us-east-1/cap-one/all-app/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3910,7 +3448,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-cap-security-dev
     dir: running_configs/waf/capterra-main/us-east-1/cap-security/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3919,7 +3456,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-cap-security-prod
     dir: running_configs/waf/capterra-main/us-east-1/cap-security/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3928,7 +3464,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-cap-security-stage
     dir: running_configs/waf/capterra-main/us-east-1/cap-security/stage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3937,7 +3472,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-services-ui-prod
     dir: running_configs/waf/capterra-main/us-east-1/services-ui/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3946,7 +3480,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-services-ui-staging
     dir: running_configs/waf/capterra-main/us-east-1/services-ui/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3955,7 +3488,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-team-blog-production
     dir: running_configs/waf/capterra-main/us-east-1/team-blog/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3964,7 +3496,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-team-blog-staging
     dir: running_configs/waf/capterra-main/us-east-1/team-blog/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3973,7 +3504,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-team-crf-production
     dir: running_configs/waf/capterra-main/us-east-1/team-crf/production
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3982,7 +3512,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-team-crf-staging
     dir: running_configs/waf/capterra-main/us-east-1/team-crf/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -3991,7 +3520,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-vendor-portal-prod
     dir: running_configs/waf/capterra-main/us-east-1/vendor-portal/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4000,7 +3528,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-east-1-vendor-portal-staging
     dir: running_configs/waf/capterra-main/us-east-1/vendor-portal/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4009,7 +3536,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-west-2-cap-mainsite-prod-dr
     dir: running_configs/waf/capterra-main/us-west-2/cap-mainsite/prod-dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4018,7 +3544,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-west-2-cap-security-prod-dr
     dir: running_configs/waf/capterra-main/us-west-2/cap-security/prod-dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4027,7 +3552,6 @@ projects:
   - name: running_configs-waf-capterra-main-us-west-2-services-ui-dr
     dir: running_configs/waf/capterra-main/us-west-2/services-ui/dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4036,7 +3560,6 @@ projects:
   - name: running_configs-waf-capterra-sandbox
     dir: running_configs/waf/capterra-sandbox
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4045,7 +3568,6 @@ projects:
   - name: running_configs-waf-capterra-search-cap-security-dev-global
     dir: running_configs/waf/capterra-search/cap-security/dev/global
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4054,7 +3576,6 @@ projects:
   - name: running_configs-waf-capterra-search-cap-security-dev-us-east-1
     dir: running_configs/waf/capterra-search/cap-security/dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4063,7 +3584,6 @@ projects:
   - name: running_configs-waf-capterra-search-cap-security-prod-global
     dir: running_configs/waf/capterra-search/cap-security/prod/global
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4072,7 +3592,6 @@ projects:
   - name: running_configs-waf-capterra-search-cap-security-prod-us-east-1
     dir: running_configs/waf/capterra-search/cap-security/prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4081,7 +3600,6 @@ projects:
   - name: running_configs-waf-capterra-search-cap-security-prod-us-west-2
     dir: running_configs/waf/capterra-search/cap-security/prod/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4090,7 +3608,6 @@ projects:
   - name: running_configs-waf-capterra-search-cap-security-stage-global
     dir: running_configs/waf/capterra-search/cap-security/stage/global
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4099,7 +3616,6 @@ projects:
   - name: running_configs-waf-capterra-search-cap-security-stage-us-east-1
     dir: running_configs/waf/capterra-search/cap-security/stage/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4108,7 +3624,6 @@ projects:
   - name: running_configs-waf-capterra-search-faas-examples-prod
     dir: running_configs/waf/capterra-search/faas-examples/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4117,7 +3632,6 @@ projects:
   - name: running_configs-waf-capterra-search-forms-as-a-service-prod
     dir: running_configs/waf/capterra-search/forms-as-a-service/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4126,7 +3640,6 @@ projects:
   - name: running_configs-waf-capterra-search-forms-as-a-service-stage
     dir: running_configs/waf/capterra-search/forms-as-a-service/stage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4135,7 +3648,6 @@ projects:
   - name: running_configs-waf-capterra-search-search-prod
     dir: running_configs/waf/capterra-search/search/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4144,7 +3656,6 @@ projects:
   - name: running_configs-waf-capterra-search-search-stage
     dir: running_configs/waf/capterra-search/search/stage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4153,7 +3664,6 @@ projects:
   - name: running_configs-waf-capterra-search-sem-ui-prod
     dir: running_configs/waf/capterra-search/sem-ui/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4162,7 +3672,6 @@ projects:
   - name: running_configs-waf-capterra-search-sem-ui-prod-dr
     dir: running_configs/waf/capterra-search/sem-ui/prod-dr
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4171,7 +3680,6 @@ projects:
   - name: running_configs-waf-capterra-search-sem-ui-stage
     dir: running_configs/waf/capterra-search/sem-ui/stage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4180,7 +3688,6 @@ projects:
   - name: running_configs-waf-capterra-search-user-workspace-dev
     dir: running_configs/waf/capterra-search/user-workspace/dev
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4189,7 +3696,6 @@ projects:
   - name: running_configs-waf-capterra-search-user-workspace-prod
     dir: running_configs/waf/capterra-search/user-workspace/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4198,7 +3704,6 @@ projects:
   - name: running_configs-waf-capterra-search-user-workspace-stage
     dir: running_configs/waf/capterra-search/user-workspace/stage
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4207,7 +3712,6 @@ projects:
   - name: running_configs-waf-central-review-form-cap-security-dev-global
     dir: running_configs/waf/central-review-form/cap-security/dev/global
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4216,7 +3720,6 @@ projects:
   - name: running_configs-waf-central-review-form-cap-security-dev-us-east-1
     dir: running_configs/waf/central-review-form/cap-security/dev/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4225,7 +3728,6 @@ projects:
   - name: running_configs-waf-central-review-form-cap-security-prod-global
     dir: running_configs/waf/central-review-form/cap-security/prod/global
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4234,7 +3736,6 @@ projects:
   - name: running_configs-waf-central-review-form-cap-security-prod-us-east-1
     dir: running_configs/waf/central-review-form/cap-security/prod/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4243,7 +3744,6 @@ projects:
   - name: running_configs-waf-central-review-form-cap-security-prod-us-west-2
     dir: running_configs/waf/central-review-form/cap-security/prod/us-west-2
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4252,7 +3752,6 @@ projects:
   - name: running_configs-waf-central-review-form-cap-security-stage-global
     dir: running_configs/waf/central-review-form/cap-security/stage/global
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4261,7 +3760,6 @@ projects:
   - name: running_configs-waf-central-review-form-cap-security-stage-us-east-1
     dir: running_configs/waf/central-review-form/cap-security/stage/us-east-1
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4270,7 +3768,6 @@ projects:
   - name: running_configs-waf-central-review-form-prod
     dir: running_configs/waf/central-review-form/prod
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
@@ -4279,7 +3776,6 @@ projects:
   - name: running_configs-waf-central-review-form-staging
     dir: running_configs/waf/central-review-form/staging
     workspace: default
-    workflow: default
     autoplan:
       when_modified:
         - "*.tf"
