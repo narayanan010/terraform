@@ -1,1 +1,0 @@
-NOTE: The secure string value for `redis_random_name-capmain-staging-redis` is set as `changeme` to keep the resource in state, actual secure string value can be obtained from DEVOPS Team.

@@ -1,4 +1,0 @@
-# Exclude local test
-**/*.json
-.secrets_*
-.env_*
